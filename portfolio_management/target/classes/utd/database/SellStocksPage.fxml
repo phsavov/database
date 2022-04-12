@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Text layoutX="270.0" layoutY="63.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Sell">
+         <font>
+            <Font size="31.0" />
+         </font>
+      </Text>
+      <Button layoutX="38.0" layoutY="20.0" mnemonicParsing="false" text="&lt;Home" />
+      <TableView layoutX="200.0" layoutY="100.0" prefHeight="200.0" prefWidth="404.0" AnchorPane.bottomAnchor="75.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="120.0">
+        <columns>
+          <TableColumn prefWidth="220.0" text="Stock " />
+          <TableColumn prefWidth="181.0" text="Price Brought" />
+            <TableColumn prefWidth="245.0" text="Sell Price" />
+        </columns>
+      </TableView>
+      <Button layoutX="262.0" layoutY="339.0" mnemonicParsing="false" text="Sell Stock" />
+      <Text layoutX="92.0" layoutY="95.0" strokeType="OUTSIDE" strokeWidth="0.0" text="These are your stocks. Please select one of your stocks to sell" />
+   </children>
+</AnchorPane>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Text layoutX="194.0" layoutY="41.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Transaction History">
+         <font>
+            <Font size="25.0" />
+         </font>
+      </Text>
+      <TableView layoutX="211.0" layoutY="-38.0" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="75.0">
+        <columns>
+          <TableColumn prefWidth="133.0" text="TransactionID" />
+          <TableColumn prefWidth="140.0" text="Stock" />
+            <TableColumn prefWidth="148.0" text="Price" />
+            <TableColumn prefWidth="178.0" text="Date" />
+        </columns>
+      </TableView>
+      <Button layoutX="14.0" layoutY="14.0" mnemonicParsing="false" text="&lt; Home" />
+      <Button layoutX="521.0" layoutY="15.0" mnemonicParsing="false" text="Logout" />
+   </children>
+</AnchorPane>

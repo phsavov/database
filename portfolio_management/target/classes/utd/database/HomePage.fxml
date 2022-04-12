@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Button layoutX="44.0" layoutY="30.0" mnemonicParsing="false" text="Logout" textAlignment="CENTER" textOverrun="CENTER_ELLIPSIS">
+         <font>
+            <Font name="Gadugi" size="15.0" />
+         </font>
+      </Button>
+      <Button layoutX="225.0" layoutY="107.0" minWidth="-Infinity" mnemonicParsing="false" prefHeight="31.0" prefWidth="139.0" text="Browse Stock" textAlignment="CENTER" AnchorPane.leftAnchor="222.0" AnchorPane.rightAnchor="233.0" AnchorPane.topAnchor="125.0" />
+      <Button layoutX="226.0" layoutY="153.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="139.0" text="Buy Stocks" textAlignment="CENTER" AnchorPane.leftAnchor="222.0" AnchorPane.rightAnchor="233.0" AnchorPane.topAnchor="175.0" />
+      <Button layoutX="225.0" layoutY="200.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="139.0" text="Sell Stocks" AnchorPane.leftAnchor="222.0" AnchorPane.rightAnchor="233.0" AnchorPane.topAnchor="225.0" />
+      <Button layoutX="222.0" layoutY="295.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="139.0" text="View Transactions" AnchorPane.leftAnchor="222.0" AnchorPane.rightAnchor="233.0" AnchorPane.topAnchor="325.0" />
+      <Button layoutX="223.0" layoutY="245.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="139.0" text="View Holdings" AnchorPane.leftAnchor="222.0" AnchorPane.rightAnchor="233.0" AnchorPane.topAnchor="275.0" />
+      <Text layoutX="177.0" layoutY="98.0" strokeType="OUTSIDE" strokeWidth="0.0" text="WELCOME! Please Select an option." />
+   </children>
+</AnchorPane>
