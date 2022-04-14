@@ -6,7 +6,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import java.io.IOException;
-import java.sql.*;
 
 /**
  * JavaFX App
@@ -44,7 +43,7 @@ public class App extends Application {
             DatabaseController db = new DatabaseController();
 
 
-            /*String[] testALL = db.RawInputQuery("SELECT * FROM UserAccount;");
+            String[] testALL = db.RawInputQuery("SELECT * FROM UserAccount;");
             for(String s : testALL) {
                 System.out.println(s);
             }
@@ -62,7 +61,7 @@ public class App extends Application {
         }
         catch(Exception e)
         {
-            System.out.println(e.getStackTrace());
+            e.printStackTrace();
         }
     }
 
