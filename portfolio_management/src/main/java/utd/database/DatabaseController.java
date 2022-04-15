@@ -10,10 +10,9 @@ public class DatabaseController {
     private static String SELL_STOCK_QUERY = "";
     private static String TRADE_STOCK_QUERY = "";
 
-    public DatabaseController() throws SQLException{
-        System.out.println("Hello, world");
-
-        connection = DriverManager.getConnection("ads-postgres.cm0vx7gau7uz.us-east-1.rds.amazonaws.com", " phsavov", "PhiLeTo2001BL$");
+    public DatabaseController() throws SQLException
+    {
+        connection = DriverManager.getConnection("jdbc:postgresql://ads-postgres.cm0vx7gau7uz.us-east-1.rds.amazonaws.com:5432/database_project", "phsavov", "PhiLeTo2001BL");
     }
 
     public void CloseDBC() throws SQLException
@@ -30,7 +29,7 @@ public class DatabaseController {
         return ResultsettoStringArray(s.executeQuery(query));
     }
 
-    public ResultSet GenericSelect(String[] colms, String from, String extras) throws SQLException
+    public String[] GenericSelect(String[] colms, String from, String extras) throws SQLException
     {
         Statement ps = connection.createStatement();
         StringBuilder sb = new StringBuilder();
@@ -48,7 +47,7 @@ public class DatabaseController {
         else sb.append(";");
         
 
-        return ps.executeQuery(sb.toString());
+        return ResultsettoStringArray(ps.executeQuery(sb.toString()));
     }
 
     public int BuyStock(String accID,String stockID,int quantity) throws SQLException

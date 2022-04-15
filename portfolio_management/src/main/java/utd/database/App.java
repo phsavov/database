@@ -6,6 +6,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import java.io.IOException;
+import java.sql.DriverManager;
 
 /**
  * JavaFX App
@@ -38,15 +39,14 @@ public class App extends Application {
 
     public static void test()
     {
+        
         try
         {
             DatabaseController db = new DatabaseController();
 
 
-            String[] testALL = db.RawInputQuery("SELECT * FROM UserAccount;");
-            for(String s : testALL) {
-                System.out.println(s);
-            }
+            String[] testALL = db.RawInputQuery("SELECT * FROM \"UserAccount\"");
+            PrintStringArray(testALL);
 
             /*boolean testLogin = db.LoginUser("user", "Pass");
             system.out.println("Logged in: "testLogin);
@@ -63,6 +63,14 @@ public class App extends Application {
         {
             e.printStackTrace();
         }
+    }
+
+    public static void PrintStringArray(String[] strings)
+    {
+        for(String s : strings) 
+            {
+                System.out.println(s);
+            }
     }
 
 }
