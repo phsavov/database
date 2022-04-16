@@ -24,7 +24,7 @@ public class UnlockPageController {
         //TODO call a method that will check if the phrase is the same or not.
 
 
-        if (false){
+        if (true){
             Alert error = new Alert(Alert.AlertType.ERROR);
             error.setHeaderText("Incorrect Phrase");
             error.setContentText("You have entered the wrong mnemonic phrase\nPlease try again");
