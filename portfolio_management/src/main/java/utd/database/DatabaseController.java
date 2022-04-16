@@ -5,7 +5,7 @@ public class DatabaseController {
     
     private Connection connection;
     private static String BUY_STOCK_QUERY = "";
-    private static String LOGIN_QUERY = "";
+    private static String LOGIN_QUERY = "Select * from \"UserAccount\" where \"Uname\" = ? and \"userPassword\" = ?;";
     private static String VIEW_HOLDINGS_QUERY = "";
     private static String SELL_STOCK_QUERY = "";
     private static String TRADE_STOCK_QUERY = "";

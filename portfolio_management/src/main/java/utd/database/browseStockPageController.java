@@ -90,6 +90,7 @@ public class browseStockPageController {
             stockField.clear();
             return;
         } else {
+            //TODO Make the two items into observable list
             System.out.println(response);
         }
     }
