@@ -40,7 +40,16 @@ public class LoginPageController {
         if (usernameTextField.getText().isBlank() == false && passwordTextField.getText().isBlank() == false) {
             String user = usernameTextField.getText();
             String pass = passwordTextField.getText();
-
+            
+            if (user.contains("--")){
+                Alert error = new Alert(Alert.AlertType.ERROR);
+                error.setHeaderText("Incorrect Credentials");
+                error.setContentText("You have entered the wrong Credentials\nPlease try again");
+                error.showAndWait();
+                usernameTextField.clear();
+                passwordTextField.clear();
+                return;
+            }
 
             if (validateLogin(user, pass)){
                 root = FXMLLoader.load(getClass().getResource("HomePage.fxml"));
