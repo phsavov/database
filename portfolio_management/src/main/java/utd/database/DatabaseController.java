@@ -5,7 +5,9 @@ public class DatabaseController {
     
     private Connection connection;
     private static String BUY_STOCK_QUERY = "";
-    private static String LOGIN_QUERY = "Select * from \"UserAccount\" where \"Uname\" = ? and \"userPassword\" = ?;";
+    private static String CREATE_USER = "INSERT INTO \"UserAccount\"(\"AccountID\",\"Uname\",\"userPassword\",\"FirstName\",\"LastName\") VALUES (?,?,?,?,?);";
+    private static String UNAME_QUERY = "Select \"AccountID\" from \"UserAccount\" where \"Uname\" = ?";
+    private static String LOGIN_QUERY = "Select \"AccountID\" from \"UserAccount\" where \"Uname\" = ? and \"userPassword\" = ?;";
     private static String VIEW_HOLDINGS_QUERY = "";
     private static String SELL_STOCK_QUERY = "";
     private static String TRADE_STOCK_QUERY = "";
@@ -58,6 +60,17 @@ public class DatabaseController {
         ps.setInt(3, quantity);
 
         return ps.executeUpdate();
+    }
+
+    public boolean createUser(String username, String password, String fname, String lname) throws SQLException {
+        PreparedStatement ps = connection.prepareStatement(CREATE_USER);
+        ps.setString(1, (new User().generateAcountID()));
+        ps.setString(2, username);
+        ps.setString(3, password);
+        ps.setString(4, fname);
+        ps.setString(5, lname);
+        ps.executeUpdate();
+        return true;
     }
 
     // hopefully safe version of user login

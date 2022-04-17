@@ -25,6 +25,8 @@ public class LoginPageController {
     @FXML
     Label loginMessageLabel;
     @FXML
+    Button createAccount;
+    @FXML
     TextField usernameTextField;
     @FXML
     PasswordField passwordTextField;
@@ -39,7 +41,7 @@ public class LoginPageController {
             String user = usernameTextField.getText();
             String pass = passwordTextField.getText();
 
-            
+
             if (validateLogin(user, pass)){
                 root = FXMLLoader.load(getClass().getResource("HomePage.fxml"));
                 stage = (Stage)((Node)e.getSource()).getScene().getWindow();
@@ -56,6 +58,15 @@ public class LoginPageController {
     public void cancelButtonOnAction(ActionEvent e) {
         Stage stage = (Stage) cancelButton.getScene().getWindow();
         stage.close();
+    }
+
+    @FXML
+    public void create(ActionEvent event) throws IOException{
+        root = FXMLLoader.load(getClass().getResource("createAccountPage.fxml"));
+        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
     }
 
     public boolean validateLogin(String user, String pass) throws SQLException {

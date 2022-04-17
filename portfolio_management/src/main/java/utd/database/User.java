@@ -18,6 +18,20 @@ public class User {
         stocks.add(new Holding(stock, ammount));
     }
 
+    public String generateAcountID(){
+        String id = "";
+
+        Random rand = new Random();
+        id = id + Math.abs((rand.nextInt() % 10000000));
+
+        System.out.println(id);
+        if (id.length() < 10){
+            return id;
+        } else {
+            id.substring(0, id.length() - 2);
+            return id;
+        }
+    }
 
     public void setPhrase() { 
         phrase = generateMnemonicPhrase();
