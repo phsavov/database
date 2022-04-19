@@ -14,6 +14,10 @@ public class User {
     public User(){
     }
 
+    public String getAccountID(){
+        return accountID;
+    }
+
     public void addStocks(Stock stock, int ammount){
         stocks.add(new Holding(stock, ammount));
     }

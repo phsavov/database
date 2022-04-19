@@ -6,8 +6,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="utd.database.HomePageController">
    <children>
       <Button layoutX="44.0" layoutY="30.0" mnemonicParsing="false" text="Logout" textAlignment="CENTER" textOverrun="CENTER_ELLIPSIS">
          <font>
@@ -20,5 +19,6 @@
       <Button layoutX="222.0" layoutY="295.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="139.0" text="View Transactions" AnchorPane.leftAnchor="222.0" AnchorPane.rightAnchor="233.0" AnchorPane.topAnchor="325.0" />
       <Button layoutX="223.0" layoutY="245.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="139.0" text="View Holdings" AnchorPane.leftAnchor="222.0" AnchorPane.rightAnchor="233.0" AnchorPane.topAnchor="275.0" />
       <Text layoutX="177.0" layoutY="98.0" strokeType="OUTSIDE" strokeWidth="0.0" text="WELCOME! Please Select an option." />
+      <Button fx:id="changePass" layoutX="468.0" layoutY="31.0" mnemonicParsing="false" onAction="#changePassWord" text="Change Password" />
    </children>
 </AnchorPane>

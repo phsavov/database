@@ -12,4 +12,8 @@ public class Stock {
         this.high = high;
         this.close = close;
     }
+    public Stock(String ticker, double close){
+        this.ticker = ticker;
+        this.close = close;
+    }
 }

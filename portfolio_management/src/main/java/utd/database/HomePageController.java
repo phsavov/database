@@ -25,6 +25,9 @@ public class HomePageController {
 
     @FXML
     private Button button_logout;
+    @FXML
+    Button changePass;
+
 
     @FXML
     public void browseStockButton(ActionEvent event) throws IOException {
@@ -81,6 +84,19 @@ public class HomePageController {
 
         root = FXMLLoader.load(getClass().getResource("LoginPage.fxml"));
         stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    @FXML
+    public void changePassWord(ActionEvent event) throws IOException{
+        Node node = (Node) event.getSource();
+        Stage stage = (Stage) node.getScene().getWindow();
+        User user = (User) stage.getUserData();
+        root = FXMLLoader.load(getClass().getResource("ChangePassword.fxml"));
+        stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+        stage.setUserData(user);
         scene = new Scene(root);
         stage.setScene(scene);
         stage.show();

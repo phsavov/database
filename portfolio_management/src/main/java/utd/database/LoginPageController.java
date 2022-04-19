@@ -40,8 +40,8 @@ public class LoginPageController {
         if (usernameTextField.getText().isBlank() == false && passwordTextField.getText().isBlank() == false) {
             String user = usernameTextField.getText();
             String pass = passwordTextField.getText();
-            
-            if (user.contains("--")){
+    
+            if (user.contains("--") || user.contains("#") || user.contains(";") || user.contains("`")){
                 Alert error = new Alert(Alert.AlertType.ERROR);
                 error.setHeaderText("Incorrect Credentials");
                 error.setContentText("You have entered the wrong Credentials\nPlease try again");
@@ -51,9 +51,15 @@ public class LoginPageController {
                 return;
             }
 
+
             if (validateLogin(user, pass)){
+                Alert loggedIn = new Alert(Alert.AlertType.CONFIRMATION);
+                loggedIn.setHeaderText("CONFIRMED");
+                loggedIn.setContentText("You have logged into your Account!!!");
+                loggedIn.showAndWait();
                 root = FXMLLoader.load(getClass().getResource("HomePage.fxml"));
                 stage = (Stage)((Node)e.getSource()).getScene().getWindow();
+                stage.setUserData(new User(new DatabaseController().getAccountID(user, pass)));
                 scene = new Scene(root);
                 stage.setScene(scene);
                 stage.show();
@@ -83,6 +89,7 @@ public class LoginPageController {
         try {
             return connectNow.LoginUser(user, pass);
         } catch (SQLException e) {
+            e.printStackTrace();
             Alert error = new Alert(Alert.AlertType.ERROR);
             error.setHeaderText("Incorrect Credentials");
             error.setContentText("You have entered the wrong Credentials\nPlease try again");

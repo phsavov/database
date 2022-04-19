@@ -27,5 +27,6 @@
             <Font size="17.0" />
          </font>
       </Label>
+      <Button fx:id="loadButton" layoutX="131.0" layoutY="58.0" mnemonicParsing="false" onAction="#loadStocks" prefHeight="27.0" prefWidth="96.0" text="Load Stocks" />
    </children>
 </AnchorPane>

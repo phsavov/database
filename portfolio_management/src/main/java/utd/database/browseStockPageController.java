@@ -2,8 +2,10 @@ package utd.database;
 
 import java.io.*;
 import java.net.*;
+import java.sql.SQLException;
 
 import javafx.scene.Node;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,6 +16,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
 public class browseStockPageController {
@@ -35,6 +38,9 @@ public class browseStockPageController {
 
     @FXML
     TableColumn<Stock, String> price;
+
+    @FXML
+    Button loadButton;
 
     private Scene scene;
     private Parent root;
@@ -95,5 +101,14 @@ public class browseStockPageController {
         }
     }
 
+    @FXML
+    public void loadStocks(ActionEvent event) throws SQLException{
+           
+        ObservableList<Stock> listOfStocks = new DatabaseController().getStocks();
 
+        stock.setCellValueFactory(new PropertyValueFactory<>("ticker"));
+        price.setCellValueFactory(new PropertyValueFactory<>("close"));
+
+        stocksTable.setItems(listOfStocks);
+    }
 }
