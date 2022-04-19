@@ -27,13 +27,31 @@ public class HomePageController {
     private Button button_logout;
     @FXML
     Button changePass;
+    @FXML
+    Button browseButton;
+    @FXML
+    Button buyButton;
+    @FXML
+    Button sellButton;
+    @FXML
+    Button holdingButton;
+    @FXML
+    Button transactionButton;
+    @FXML
+    Button logOut;
+
+
 
 
     @FXML
     public void browseStockButton(ActionEvent event) throws IOException {
+        Node node = (Node) event.getSource();
+        Stage stage = (Stage) node.getScene().getWindow();
+        User user = (User) stage.getUserData();
 
         root = FXMLLoader.load(getClass().getResource("BrowseStockPage.fxml"));
         stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+        stage.setUserData(user);
         scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
@@ -41,9 +59,13 @@ public class HomePageController {
 
     @FXML
     public void buyStockButton(ActionEvent event) throws IOException {
+        Node node = (Node) event.getSource();
+        Stage stage = (Stage) node.getScene().getWindow();
+        User user = (User) stage.getUserData();
 
         root = FXMLLoader.load(getClass().getResource("BuyStocksPage.fxml"));
         stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+        stage.setUserData(user);
         scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
@@ -51,9 +73,13 @@ public class HomePageController {
 
     @FXML
     public void sellStocksButton(ActionEvent event) throws IOException {
+        Node node = (Node) event.getSource();
+        Stage stage = (Stage) node.getScene().getWindow();
+        User user = (User) stage.getUserData();
 
         root = FXMLLoader.load(getClass().getResource("SellStocksPage.fxml"));
         stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+        stage.setUserData(user);
         scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
@@ -61,9 +87,13 @@ public class HomePageController {
 
     @FXML
     public void viewHoldingsButton(ActionEvent event) throws IOException {
+        Node node = (Node) event.getSource();
+        Stage stage = (Stage) node.getScene().getWindow();
+        User user = (User) stage.getUserData();
 
         root = FXMLLoader.load(getClass().getResource("ViewHoldings.fxml"));
         stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+        stage.setUserData(user);
         scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
@@ -71,9 +101,13 @@ public class HomePageController {
 
     @FXML
     public void viewTransactionsButton(ActionEvent event) throws IOException {
+        Node node = (Node) event.getSource();
+        Stage stage = (Stage) node.getScene().getWindow();
+        User user = (User) stage.getUserData();
 
         root = FXMLLoader.load(getClass().getResource("TransactionPage.fxml"));
         stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+        stage.setUserData(user);
         scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
@@ -94,6 +128,7 @@ public class HomePageController {
         Node node = (Node) event.getSource();
         Stage stage = (Stage) node.getScene().getWindow();
         User user = (User) stage.getUserData();
+
         root = FXMLLoader.load(getClass().getResource("ChangePassword.fxml"));
         stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         stage.setUserData(user);
