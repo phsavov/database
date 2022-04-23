@@ -3,6 +3,7 @@ package utd.database;
 import java.io.*;
 import java.net.*;
 import java.sql.SQLException;
+import org.json.*;
 
 import javafx.scene.Node;
 import javafx.collections.ObservableList;
@@ -45,6 +46,8 @@ public class browseStockPageController {
     private Scene scene;
     private Parent root;
     private Stage stage;
+
+    public ObservableList<Stock> listOfStocks;
     
     @FXML
     public void goBack(ActionEvent event) throws IOException {
@@ -56,7 +59,7 @@ public class browseStockPageController {
     }
 
     @FXML
-    public void addButtonPushed(ActionEvent event) throws IOException {
+    public void addButtonPushed(ActionEvent event) throws IOException, SQLException {
         String ticker = stockField.getText();
 
         if (ticker.length() > 5){
@@ -96,15 +99,24 @@ public class browseStockPageController {
             stockField.clear();
             return;
         } else {
-            //TODO Make the two items into observable list
-            System.out.println(response);
+            JSONObject stockItem = new JSONObject(response);
+            
+            //add stock to database and then call the loadStocks method
+            stockItem.get("High");
+            stockItem.get("Open");
+            stockItem.get("Close");
+
+            load();
         }
     }
 
     @FXML
     public void loadStocks(ActionEvent event) throws SQLException{
-           
-        ObservableList<Stock> listOfStocks = new DatabaseController().getStocks();
+        load();
+    }
+
+    public void load() throws SQLException {
+        listOfStocks = new DatabaseController().getStocks();
 
         stock.setCellValueFactory(new PropertyValueFactory<>("ticker"));
         price.setCellValueFactory(new PropertyValueFactory<>("close"));
