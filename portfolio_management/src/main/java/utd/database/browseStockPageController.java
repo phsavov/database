@@ -21,7 +21,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
 public class browseStockPageController {
-    
+
     @FXML
     Button returnHome;
 
@@ -38,7 +38,7 @@ public class browseStockPageController {
     TableColumn<Stock, String> stock;
 
     @FXML
-    TableColumn<Stock, String> price;
+    TableColumn<Stock, String> close;
 
     @FXML
     Button loadButton;
@@ -48,11 +48,11 @@ public class browseStockPageController {
     private Stage stage;
 
     public ObservableList<Stock> listOfStocks;
-    
+
     @FXML
     public void goBack(ActionEvent event) throws IOException {
         root = FXMLLoader.load(getClass().getResource("HomePage.fxml"));
-        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
@@ -62,7 +62,7 @@ public class browseStockPageController {
     public void addButtonPushed(ActionEvent event) throws IOException, SQLException {
         String ticker = stockField.getText();
 
-        if (ticker.length() > 5){
+        if (ticker.length() > 5) {
             Alert badInput = new Alert(Alert.AlertType.ERROR);
             badInput.setHeaderText("Incorrect Input");
             badInput.setHeaderText("The Stock ticker entered was too long.\n Please enter a correct ticker.");
@@ -70,7 +70,7 @@ public class browseStockPageController {
             stockField.clear();
             return;
         }
-        String api = "http://127.0.0.1:5000/stock/"+ticker;
+        String api = "http://127.0.0.1:5000/stock/" + ticker;
         InputStreamReader in = null;
         try {
             URL url = new URL(api);
@@ -85,33 +85,40 @@ public class browseStockPageController {
             stockField.clear();
             return;
         }
-        
-        
+
         BufferedReader br = new BufferedReader(in);
         String response = br.readLine();
-
 
         if (response.equals("Invalid Ticker")) {
             Alert badTicker = new Alert(Alert.AlertType.ERROR);
             badTicker.setHeaderText("Ticker does not exist.");
-            badTicker.setHeaderText("The Ticker."+ticker+"does not exist.\nPlease try again.");
+            badTicker.setHeaderText("The Ticker." + ticker + "does not exist.\nPlease try again.");
             badTicker.showAndWait();
             stockField.clear();
             return;
         } else {
             JSONObject stockItem = new JSONObject(response);
-            
-            //add stock to database and then call the loadStocks method
-            stockItem.get("High");
-            stockItem.get("Open");
-            stockItem.get("Close");
 
-            load();
+            
+
+            if (new DatabaseController().addStock(ticker, Double.valueOf(String.valueOf(stockItem.get("Open"))),
+                    Double.valueOf(String.valueOf(stockItem.get("High"))),
+                    Double.valueOf(String.valueOf(stockItem.get("Close"))))) {
+                load();
+            } else {
+                Alert cantInsert = new Alert(Alert.AlertType.ERROR);
+                cantInsert.setHeaderText("Cannot Insert Stock into Database");
+                cantInsert.setHeaderText("Seems to be issue with the database or stock already there.\nCannot insert at the moment.");
+                cantInsert.showAndWait();
+                stockField.clear();
+                return;
+            }
+
         }
     }
 
     @FXML
-    public void loadStocks(ActionEvent event) throws SQLException{
+    public void loadStocks(ActionEvent event) throws SQLException {
         load();
     }
 
@@ -119,8 +126,8 @@ public class browseStockPageController {
         listOfStocks = new DatabaseController().getStocks();
 
         stock.setCellValueFactory(new PropertyValueFactory<>("ticker"));
-        price.setCellValueFactory(new PropertyValueFactory<>("close"));
-
+        close.setCellValueFactory(new PropertyValueFactory<>("close"));
+        //System.out.println("\n\n test\n"+listOfStocks.get(0).close);
         stocksTable.setItems(listOfStocks);
     }
 }

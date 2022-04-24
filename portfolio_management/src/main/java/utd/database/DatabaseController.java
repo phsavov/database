@@ -8,6 +8,7 @@ public class DatabaseController {
     
     private Connection connection;
     private static String BUY_STOCK_QUERY = "";
+    private static String INSERT_STOCK = "INSERT INTO \"Stocks\"(\"StockID\", \"StockValue\", \"Open\", \"Close\", \"High\", \"Change\") VALUES (?,?,?,?,?,?);";
     private static String CREATE_USER = "INSERT INTO \"UserAccount\"(\"AccountID\",\"Uname\",\"userPassword\",\"FirstName\",\"LastName\") VALUES (?,?,?,?,?);";
     private static String UNAME_QUERY = "Select \"AccountID\" from \"UserAccount\" where \"Uname\" = ?";
     private static String LOGIN_QUERY = "Select \"AccountID\" from \"UserAccount\" where \"Uname\" = ? and \"userPassword\" = ?;";
@@ -42,11 +43,27 @@ public class DatabaseController {
         ResultSet result = query.executeQuery(GET_STOCKS);
 
         while (result.next()){
-            stocks.add(new Stock(result.getString(0), result.getDouble(1)));
+            stocks.add(new Stock(result.getString(1), result.getString(2)));
         }
 
         return stocks;
         
+    }
+
+    public boolean addStock(String ticker, double open, double high, double close) throws SQLException{
+        PreparedStatement prep = connection.prepareStatement(INSERT_STOCK);
+        prep.setString(1, ticker);
+        prep.setDouble(2, close);
+        prep.setDouble(3, open);
+        prep.setDouble(4, close);
+        prep.setDouble(5, high);
+        prep.setDouble(6, (close - open));
+        try{
+            prep.executeUpdate();
+        } catch (Exception e){
+            return false;
+        }
+        return true;
     }
 
     public String getAccountID(String user, String pass) throws SQLException{
