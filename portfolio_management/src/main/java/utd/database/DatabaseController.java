@@ -7,16 +7,24 @@ import javafx.collections.ObservableList;
 public class DatabaseController {
     
     private Connection connection;
-    private static String BUY_STOCK_QUERY = "";
+    private static String BUY_STOCK_QUERY = "INSERT INTO \"Transactions\"(\"TransactionID\",\"StockID\",\"Quantity\",\"Date\")\n" +
+            "VALUES('?','?','?','?');\n" +
+            "INSERT INTO \"Holdings\"(\"AccountID\",\"TransactionID\",\"StockID\",\"BuyPrice\",\"CurrentValue\",\"PurchaseDate\")\n" +
+            "VALUES('?','?','?','?','?','?');\n" +
+            "UPDATE \"Portfolio\"\n" +
+            "SET \"Balance\" = '?';\n" +
+            "WHERE \"AccountID\"= '?'";
     private static String INSERT_STOCK = "INSERT INTO \"Stocks\"(\"StockID\", \"StockValue\", \"Open\", \"Close\", \"High\", \"Change\") VALUES (?,?,?,?,?,?);";
     private static String CREATE_USER = "INSERT INTO \"UserAccount\"(\"AccountID\",\"Uname\",\"userPassword\",\"FirstName\",\"LastName\") VALUES (?,?,?,?,?);";
     private static String UNAME_QUERY = "Select \"AccountID\" from \"UserAccount\" where \"Uname\" = ?";
     private static String LOGIN_QUERY = "Select \"AccountID\" from \"UserAccount\" where \"Uname\" = ? and \"userPassword\" = ?;";
     private static String PHRASE_QUERY = "Select \"MnemonicPhrase\" from \"SecurityInfo\" where \"AccountID\" = ?";
     private static String GET_STOCKS = "Select \"StockID\", \"Close\" from \"Stocks\";";
-    private static String VIEW_HOLDINGS_QUERY = "";
+    private static String VIEW_HOLDINGS_QUERY =  "Select * from \"Holdings\" where \"AccountID\" = ?";
     private static String SELL_STOCK_QUERY = "";
     private static String TRADE_STOCK_QUERY = "";
+    private static String VIEW_TRANSACTION_QUERY = "Select * from \"Transactions\", \"UserAccount\" where \"AccountID\" = ?";
+    private static String GET_BALANCE = "select \"Balance\"\n from \"Portfolio\"\n where \"Portfolio\".\"AccountID\" = ?;";
 
     public DatabaseController() throws SQLException
     {
@@ -66,6 +74,15 @@ public class DatabaseController {
         return true;
     }
 
+    public String getBalance(String accID) throws SQLException
+    {
+        PreparedStatement ps = connection.prepareStatement(GET_BALANCE);
+        ps.setString(1, accID);
+        ResultSet result = ps.executeQuery();
+        result.next();
+        return result.getString(1);
+    }
+
     public String getAccountID(String user, String pass) throws SQLException{
         Statement query = connection.createStatement();
         ResultSet result = query.executeQuery("Select \"AccountID\" from \"UserAccount\" WHERE \"Uname\" = '"+user+"' and \"userPassword\" = '"+pass+"';");
@@ -100,12 +117,22 @@ public class DatabaseController {
         return ResultsettoStringArray(ps.executeQuery(sb.toString()));
     }
 
-    public int BuyStock(String accID,String stockID,int quantity) throws SQLException
+   public int BuyStock(String accID, String transID, Date date, String stockID, int quantity, double balance, double price) throws SQLException
     {
         PreparedStatement ps = connection.prepareStatement(BUY_STOCK_QUERY);
-        ps.setString(1, accID);
+
+        ps.setString(1, transID);
         ps.setString(2, stockID);
         ps.setInt(3, quantity);
+        ps.setDate(4,date);
+        ps.setString(5, accID);
+        ps.setString(6, stockID);
+        ps.setDate(7, date);
+        ps.setDouble(8, price);
+        ps.setDouble(9, price);
+        ps.setString(10, transID);
+        ps.setDouble(11, balance);
+        ps.setString(12,accID);
 
         return ps.executeUpdate();
     }
@@ -134,13 +161,48 @@ public class DatabaseController {
     //Returns a string array of every hold an account has
     // in the format
     // holdings[x] = "StockId,Quantity,Price,CurrentValue";
-    public String[] ViewHoldings(String accId) throws SQLException
+     public ObservableList<Holding> ViewHoldings(String accId) throws SQLException
     {
+        ObservableList<Holding> holdList = FXCollections.observableArrayList();
         PreparedStatement ps = connection.prepareStatement(VIEW_HOLDINGS_QUERY);
-
         ps.setString(1, accId);
+        ResultSet rSet = ps.executeQuery();
+        while(rSet.next())
+        {
+            //creating a Holdings object
+            Holding holdLst = new Holding();
 
-        return ResultsettoStringArray(ps.executeQuery());
+            //setting the attributes of that object with the values from the query with the column names used
+            holdLst.setStockID(rSet.getString("StockID"));
+            holdLst.setPurchaseDate(rSet.getDate("purchaseDate"));
+            holdLst.setBuyPrice(rSet.getDouble("BuyPrice"));
+            holdLst.setCurrentVal(rSet.getDouble("currentValue") );
+            holdLst.setTransID(rSet.getString("transactionID"));
+
+            //adding the object to the holdings list
+            holdList.add(holdLst);  
+        }
+        //returning the holding list
+        return holdList;
+    }
+
+    public ObservableList<Transaction> ViewTransaction(String userID) throws SQLException
+    {
+        ObservableList<Transaction> transactionList = FXCollections.observableArrayList();
+
+        PreparedStatement prepStat = connection.prepareStatement(VIEW_TRANSACTION_QUERY);
+        prepStat.setString(1, userID);
+        ResultSet resultSet = prepStat.executeQuery();
+        while(resultSet.next())
+        {
+            Transaction tsn = new Transaction();
+            tsn.setTransactionID(resultSet.getString("TransactionID"));
+            tsn.setStockID(resultSet.getString("StockID"));
+            tsn.setQuantity(resultSet.getInt("Quantity"));
+            tsn.setBuyDate(resultSet.getDate("Date")); 
+            transactionList.add(tsn);  
+        }
+        return transactionList;
     }
 
     public int SellStocks(String accId,String stockid) throws SQLException
@@ -179,5 +241,36 @@ public class DatabaseController {
         }
 
         return sb.toString().split("\n");
+    }
+
+
+
+    public boolean updateBal(double newBal, double stockNum) throws SQLException{
+        Statement query = connection.createStatement();
+        return query.executeUpdate("UPDATE \"Portfolio\" SET \"Balance\" = '\"Balance\" + ("+newBal+" * "+stockNum+")';") > 0;
+    }
+
+    public double getSellVal(String stockID) throws SQLException {
+        Statement query = connection.createStatement();
+        ResultSet result = query.executeQuery("Select \"CurrentValue\" from \"Holdings\" WHERE \"StockID\" = '"+stockID+"';");
+        result.next();
+        return result.getDouble(1);
+    }
+
+    public boolean getStockID(String ticker) throws SQLException {
+        Statement query = connection.createStatement();
+        ResultSet result = query.executeQuery("Select \"StockID\" from \"Holdings\" WHERE \"StockID\" = '"+ticker+"';");
+
+        if(result.absolute(1)) {
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+
+    public boolean deleteSell(String ticker) throws SQLException {
+        Statement query = connection.createStatement();
+        return query.executeUpdate("DELETE FROM \"Holdings\" WHERE \"StockID\" = '"+ticker+"';") > 0;
     }
 }

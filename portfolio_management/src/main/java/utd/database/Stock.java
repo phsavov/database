@@ -6,6 +6,8 @@ public class Stock {
     public String open;
     public String high;
     public String close;
+    public double bought;
+    public double sold;
 
     public Stock(String ticker, String open, String high, String close) {
         this.ticker = ticker;
@@ -17,6 +19,12 @@ public class Stock {
     public Stock(String ticker, String close) {
         this.ticker = ticker;
         this.close = close;
+    }
+
+    public Stock(String ticker, double bought, double sold) {
+        this.ticker = ticker;
+        this.bought = bought;
+        this.sold = sold;
     }
 
     public String getTicker() {

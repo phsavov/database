@@ -1,25 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.text.*?>
-<?import javafx.scene.control.*?>
-<?import java.lang.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="utd.database.buyStockController">
    <children>
-      <Button layoutX="14.0" layoutY="29.0" mnemonicParsing="false" text="&lt; Home" />
-      <Text layoutX="273.0" layoutY="72.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Buy">
+      <Button fx:id="returnHome" layoutX="14.0" layoutY="29.0" mnemonicParsing="false" onAction="#goBack" text="&lt; Home" />
+      <Text layoutX="272.0" layoutY="71.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Buy">
          <font>
             <Font name="System Bold" size="30.0" />
          </font>
       </Text>
-      <TableView layoutX="154.0" layoutY="131.0" prefHeight="234.0" prefWidth="600.0" AnchorPane.bottomAnchor="66.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="100.0">
+      <TableView fx:id="stocksTable" layoutX="154.0" layoutY="91.0" onMouseClicked="#rowClicked" prefHeight="208.0" prefWidth="600.0" AnchorPane.bottomAnchor="101.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="91.0">
         <columns>
-          <TableColumn prefWidth="308.0" text="Stock" />
-          <TableColumn prefWidth="291.0" text="Price" />
+          <TableColumn fx:id="stock" prefWidth="308.0" text="Stock" />
+          <TableColumn fx:id="price" prefWidth="291.0" text="Price" />
         </columns>
       </TableView>
-      <Button layoutX="268.0" layoutY="355.0" mnemonicParsing="false" text="Buy" />
+      <VBox fx:id="stockInfoVbox" layoutX="168.0" layoutY="303.0" prefHeight="91.0" prefWidth="123.0">
+         <children>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Stock ID:" />
+            <TextField fx:id="stockTextField" editable="false" prefHeight="25.0" prefWidth="375.0" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Price:" />
+            <TextField fx:id="priceTextField" editable="false" prefHeight="25.0" prefWidth="252.0" />
+         </children>
+      </VBox>
+      <VBox fx:id="buyStockVbox" layoutX="315.0" layoutY="303.0" prefHeight="91.0" prefWidth="123.0">
+         <children>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Buy how many?" />
+            <TextField fx:id="buyTextField" editable="false" />
+            <Button fx:id="buyButton" disable="true" mnemonicParsing="false" onAction="#buyStock" prefHeight="21.0" prefWidth="121.0" text="Buy" />
+         </children>
+      </VBox>
+      <VBox layoutX="448.0" layoutY="33.0" prefHeight="40.0" prefWidth="135.0">
+         <children>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Current Balance:" />
+            <TextField fx:id="balanceTextField" editable="false" />
+         </children>
+      </VBox>
    </children>
 </AnchorPane>
