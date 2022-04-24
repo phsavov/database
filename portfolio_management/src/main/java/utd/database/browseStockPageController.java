@@ -127,7 +127,7 @@ public class browseStockPageController {
 
         stock.setCellValueFactory(new PropertyValueFactory<>("ticker"));
         close.setCellValueFactory(new PropertyValueFactory<>("close"));
-        //System.out.println("\n\n test\n"+listOfStocks.get(0).close);
+        
         stocksTable.setItems(listOfStocks);
     }
 }
