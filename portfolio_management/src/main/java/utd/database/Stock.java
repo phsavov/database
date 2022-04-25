@@ -9,12 +9,15 @@ public class Stock {
     public double bought;
     public double sold;
 
+
     public Stock(String ticker, String open, String high, String close) {
         this.ticker = ticker;
         this.open = open;
         this.high = high;
         this.close = close;
     }
+
+    
 
     public Stock(String ticker, String close) {
         this.ticker = ticker;
@@ -26,7 +29,7 @@ public class Stock {
         this.bought = bought;
         this.sold = sold;
     }
-
+    
     public String getTicker() {
         return ticker;
     }
@@ -42,4 +45,11 @@ public class Stock {
     public final String getClose() {
         return close;
     }
+    public Double getBought(){
+        return bought;
+    }
+    public Double getSold(){
+        return sold;
+    }
+    
 }

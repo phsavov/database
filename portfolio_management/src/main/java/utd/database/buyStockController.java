@@ -69,6 +69,10 @@ public class buyStockController {
 
     @FXML
     public void buyStock(ActionEvent event) throws IOException, SQLException {
+        
+        balance = Double.valueOf(new DatabaseController().getBalance(accID));
+        balanceTextField.setText(String.valueOf(balance));
+
         totalPrice = Double.valueOf(priceTextField.getText()) * Double.valueOf(buyTextField.getText());
         if(totalPrice > balance) {
             Alert insufficientFunds = new Alert(Alert.AlertType.ERROR);
@@ -79,9 +83,8 @@ public class buyStockController {
             DatabaseController connectNow = new DatabaseController();
             Transaction newTransaction = new Transaction();
             try {
-                transactionID = newTransaction.getTransactionID();
-                currentDate = new Date(System.currentTimeMillis());
-                connectNow.BuyStock(accID, transactionID, currentDate, stockTextField.getText(),
+                balance -= totalPrice;
+                connectNow.BuyStock(accID, stockTextField.getText(),
                         Integer.valueOf(buyTextField.getText()), balance, Double.valueOf(priceTextField.getText()));
                 Alert purchaseConfirmation = new Alert(Alert.AlertType.CONFIRMATION);
                 purchaseConfirmation.setHeaderText("Purchase Confirmation");
@@ -104,8 +107,6 @@ public class buyStockController {
         Stage stage = (Stage) node.getScene().getWindow();
         User user = (User) stage.getUserData();
         accID = String.valueOf(user.getAccountID());
-        balance = Double.valueOf(new DatabaseController().getBalance(accID));
-        balanceTextField.setText(String.valueOf(balance));
 
         buyTextField.setEditable(true);
         buyTextField.textProperty().addListener(new ChangeListener<String>() {
@@ -126,6 +127,12 @@ public class buyStockController {
         stock.setCellValueFactory(new PropertyValueFactory<>("ticker"));
         price.setCellValueFactory(new PropertyValueFactory<>("close"));
         stocksTable.setItems(listOfStocks);
+    }
+
+    public void updateBalance() throws SQLException
+    {
+        balance = Double.valueOf(new DatabaseController().getBalance(accID));
+        balanceTextField.setText(String.valueOf(balance));
     }
 }
 

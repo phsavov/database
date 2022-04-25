@@ -26,7 +26,7 @@ public class HoldingPageController {
     User user;
 
     //list that will hold the results of the query
-    public ObservableList<Holding> holdingsList;
+    public ObservableList<AggregateHolding> holdingsList;
 
     @FXML
     private Button logOut;
@@ -38,22 +38,15 @@ public class HoldingPageController {
     private Button showHoldingsView;
     
     @FXML
-    private TableView<Transaction> holdingTable;
+    private TableView<AggregateHolding> holdingTable;
     @FXML
-    private TableColumn<Transaction, String> colStock;
+    private TableColumn<AggregateHolding, String> colStock;
 
     @FXML
-    private TableColumn<Transaction, Date> puchaseDateCol;
+    private TableColumn<AggregateHolding, Double> numSharesCol;
 
     @FXML
-    private TableColumn<Transaction, Double> buyPriceCol;
-
-    @FXML
-    private TableColumn<Transaction, Double> curValCol;
-
-    @FXML
-    private TableColumn<Transaction, String> transIDCol;
-
+    private TableColumn<AggregateHolding, Double> curValCol;
  
     @FXML
     void backHomeOnClick(ActionEvent event) throws IOException 
@@ -95,14 +88,13 @@ public class HoldingPageController {
         stage = (Stage) node.getScene().getWindow();
         user = (User) stage.getUserData();
 
-        holdingsList = new DatabaseController().ViewHoldings(user.getAccountID());
-        colStock.setCellValueFactory(new PropertyValueFactory<>("stockID"));
-        puchaseDateCol.setCellValueFactory(new PropertyValueFactory<>("purchaseDate"));
-        buyPriceCol.setCellValueFactory(new PropertyValueFactory<>("buyPrice"));
-        curValCol.setCellValueFactory(new PropertyValueFactory<>("currentVal"));
-        transIDCol.setCellValueFactory(new PropertyValueFactory<>("transID"));
+        holdingsList = new DatabaseController().aggregateHoldings(user.getAccountID());
+
+        colStock.setCellValueFactory(new PropertyValueFactory<>("ticker"));
+        numSharesCol.setCellValueFactory(new PropertyValueFactory<>("shares"));
+        curValCol.setCellValueFactory(new PropertyValueFactory<>("sellPrice"));
         
-        
+        holdingTable.setItems(holdingsList);
     }
 
 

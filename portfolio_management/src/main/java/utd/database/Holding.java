@@ -12,10 +12,20 @@ public class Holding {
     private double buyPrice;
     private double currentVal;
     private String transID;
+    private int numShares;
     
     public Holding() {
     }
 
+    public int getNumShares()
+    {
+        return numShares;
+    }
+
+    public void setNumShares(int numShares)
+    {
+        this.numShares = numShares;
+    }
 
     //Accessor Methods
     public String getTransID() {

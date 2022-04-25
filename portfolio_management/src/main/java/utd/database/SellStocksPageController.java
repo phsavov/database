@@ -33,89 +33,109 @@ public class SellStocksPageController {
     private Stage stage;
 
     @FXML
-    private TableView<Stock> table_users;
+    TableView<AggregateHolding> sellStocks;
 
     @FXML
-    private TableColumn<Stock,String> col_stock;
+    private TableColumn<AggregateHolding, String> col_stock;
 
     @FXML
-    private TableColumn<Stock,Double> col_priceBought;
+    private TableColumn<AggregateHolding, Double> col_sellPrice;
 
     @FXML
-    private TableColumn<Stock,Double> col_sellPrice;
+    private TableColumn<AggregateHolding, Integer> numShares;
 
     @FXML
     private Button updateButton;
 
     @FXML
+    Button sellButton;
+
+    @FXML
     Button homePage;
 
     @FXML
-    TextField Ticker;
+    private TextField ticker;
 
     @FXML
-    TextField NumStock;
+    private TextField numStocks;
+
+    User user;
 
     @FXML
     public void homeButton(ActionEvent event) throws IOException {
 
         root = FXMLLoader.load(getClass().getResource("HomePage.fxml"));
-        stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
     }
 
     @FXML
-    public void sellButton(ActionEvent event) throws SQLException {
+    public void sellStock(ActionEvent event) throws SQLException {
         DatabaseController database = new DatabaseController();
         Node node = (Node) event.getSource();
         Stage stage = (Stage) node.getScene().getWindow();
         User user = (User) stage.getUserData();
-        
-        String ticker = Ticker.getText();
-        double stockNum = Double.parseDouble(NumStock.getText());
 
-        if (ticker.length() > 5){
+        String tickerString = ticker.getText();
+        String numofShares = numStocks.getText();
+
+        for (int i = 0; i < numofShares.length(); i++) {
+            if (numofShares.charAt(i) > 57) {
+                Alert badInput = new Alert(Alert.AlertType.ERROR);
+                badInput.setHeaderText("Incorrect Input");
+                badInput.setHeaderText("The number of shares was invalid.\n Please enter a valid value.");
+                badInput.showAndWait();
+                ticker.clear();
+                return;
+            }
+        }
+
+        if (tickerString.length() > 5) {
             Alert badInput = new Alert(Alert.AlertType.ERROR);
             badInput.setHeaderText("Incorrect Input");
             badInput.setHeaderText("The Stock ticker entered was too long.\n Please enter a correct ticker.");
             badInput.showAndWait();
-            Ticker.clear();
+            ticker.clear();
             return;
         }
 
-        boolean stockTicker = new DatabaseController().getStockID(ticker);
-        double sellPrice = new DatabaseController().getSellVal(ticker);
-
-        if (stockTicker && new DatabaseController().updateBal(sellPrice, stockNum)) {
-            Alert made = new Alert(Alert.AlertType.CONFIRMATION);
-            made.setHeaderText("Stock sold");
-            made.showAndWait();
-            new DatabaseController().deleteSell(ticker);
+        if (database.SellStock(user.getAccountID(), tickerString, Integer.valueOf(numofShares))) {
+            Alert sold = new Alert(Alert.AlertType.CONFIRMATION);
+            sold.setHeaderText("CONFIRMED");
+            sold.setContentText("You have sold the stock!");
+            sold.showAndWait();
+            ticker.clear();
+            numStocks.clear();
+        } else {
+            Alert sold = new Alert(Alert.AlertType.ERROR);
+            sold.setHeaderText("ERROR");
+            sold.setContentText("There was an error with selling the stock\ntransaction not completed");
+            sold.showAndWait();
+            ticker.clear();
+            numStocks.clear();
         }
-        else {
-            Alert made = new Alert(Alert.AlertType.ERROR);
-            made.setHeaderText("Stock Not Sold");
-            made.setContentText("There was an issue");
-            made.showAndWait();
-        }
-        //int selectedID = table_users.getSelectionModel().getSelectedIndex();
-        //table_users.getItems().remove(selectedID);
     }
 
     @FXML
-    void loadButton(ActionEvent event) throws SQLException {
+    public void loadButton(ActionEvent event) throws SQLException {
         Node node = (Node) event.getSource();
         Stage stage = (Stage) node.getScene().getWindow();
-        User user = (User) stage.getUserData();
+        user = (User) stage.getUserData();
 
-        ObservableList<Stock> listOfStocks = new DatabaseController().getStocks();
-        
+        ObservableList<AggregateHolding> listOfStocks = new DatabaseController().aggregateHoldings(user.getAccountID());
+
         col_stock.setCellValueFactory(new PropertyValueFactory<>("ticker"));
-        col_priceBought.setCellValueFactory(new PropertyValueFactory<>("bought"));
-        col_sellPrice.setCellValueFactory(new PropertyValueFactory<>("sold"));
+        numShares.setCellValueFactory(new PropertyValueFactory<>("shares"));
+        col_sellPrice.setCellValueFactory(new PropertyValueFactory<>("sellPrice"));
 
-        table_users.setItems(listOfStocks);
+        try {
+            sellStocks.setItems(listOfStocks);
+            System.out.print("here");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 }

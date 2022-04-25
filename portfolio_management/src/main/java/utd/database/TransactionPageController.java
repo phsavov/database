@@ -97,6 +97,8 @@ public class TransactionPageController {
         stockCol.setCellValueFactory(new PropertyValueFactory<>("stockID"));
         qtyCol.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         dateCol.setCellValueFactory(new PropertyValueFactory<>("buyDate"));
+
+        transactionTable.setItems(transList);
     }
 
   

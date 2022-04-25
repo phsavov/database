@@ -16,10 +16,8 @@
       <TableView fx:id="holdingTable" layoutX="144.0" layoutY="123.0" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="100.0">
         <columns>
           <TableColumn fx:id="colStock" prefWidth="90.0" text="Stock" />
-          <TableColumn fx:id="puchaseDateCol" prefWidth="140.0" text="Date of Purchase" />
-         <TableColumn fx:id="buyPriceCol" prefWidth="140.0" text="Price at Purchase" />
+         <TableColumn fx:id="numSharesCol" prefWidth="140.0" text="# of shares" />
          <TableColumn fx:id="curValCol" prefWidth="133.0" text="Current Value" />
-         <TableColumn fx:id="transIDCol" prefWidth="110.0" text="TransactionID" />
         </columns>
       </TableView>
       <Button fx:id="home" layoutX="29.0" layoutY="17.0" mnemonicParsing="false" onAction="#backHomeOnClick" text="&lt;Home" />

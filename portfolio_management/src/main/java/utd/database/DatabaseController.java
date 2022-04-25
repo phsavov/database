@@ -7,13 +7,21 @@ import javafx.collections.ObservableList;
 public class DatabaseController {
     
     private Connection connection;
-    private static String BUY_STOCK_QUERY = "INSERT INTO \"Transactions\"(\"TransactionID\",\"StockID\",\"Quantity\",\"Date\")\n" +
-            "VALUES('?','?','?','?');\n" +
-            "INSERT INTO \"Holdings\"(\"AccountID\",\"TransactionID\",\"StockID\",\"BuyPrice\",\"CurrentValue\",\"PurchaseDate\")\n" +
-            "VALUES('?','?','?','?','?','?');\n" +
-            "UPDATE \"Portfolio\"\n" +
-            "SET \"Balance\" = '?';\n" +
-            "WHERE \"AccountID\"= '?'";
+    private static String INSERT_TRANSACTION ="INSERT INTO \"Transactions\"(\"TransactionID\",\"StockID\",\"Quantity\",\"Date\")\n" +
+            "VALUES(?,?,?,?);\n";
+    private static String INSERT_HOLDING ="INSERT INTO \"Holdings\"(\"AccountID\",\"TransactionID\",\"StockID\",\"BuyPrice\",\"CurrentValue\",\"PurchaseDate\")\n" +
+            "VALUES(?,?,?,?,?,?);\n";
+    private static String UPDATE_BALANCE ="UPDATE \"Portfolio\"\n" +
+            "SET \"Balance\" = ?\n" +
+            "WHERE \"AccountID\"= ?;";
+
+    private static String SELL_BALANCE_UPDATE = "UPDATE \"Portfolio\" SET \"Balance\" = Balance + ? WHERE \"AccountID\"= ?;";
+
+    private static String AGGREGATE_HOLDINGS= "select \"Holdings\".\"StockID\", sum(\"Quantity\") as \"shares\", \"Holdings\".\"CurrentValue\" as \"Sell Price\"\n"+
+                                               "from (\"Holdings\" join \"Transactions\" on \"Holdings\".\"TransactionID\" = \"Transactions\".\"TransactionID\")\n"+
+                                               "where \"AccountID\" = ?\n"+
+                                               "group by \"Holdings\".\"StockID\", \"Holdings\".\"CurrentValue\";";
+    
     private static String INSERT_STOCK = "INSERT INTO \"Stocks\"(\"StockID\", \"StockValue\", \"Open\", \"Close\", \"High\", \"Change\") VALUES (?,?,?,?,?,?);";
     private static String CREATE_USER = "INSERT INTO \"UserAccount\"(\"AccountID\",\"Uname\",\"userPassword\",\"FirstName\",\"LastName\") VALUES (?,?,?,?,?);";
     private static String UNAME_QUERY = "Select \"AccountID\" from \"UserAccount\" where \"Uname\" = ?";
@@ -25,6 +33,7 @@ public class DatabaseController {
     private static String TRADE_STOCK_QUERY = "";
     private static String VIEW_TRANSACTION_QUERY = "Select * from \"Transactions\", \"UserAccount\" where \"AccountID\" = ?";
     private static String GET_BALANCE = "select \"Balance\"\n from \"Portfolio\"\n where \"Portfolio\".\"AccountID\" = ?;";
+    private static String GET_ONE_STOCK = "Select \"StockID\" from \"Stocks\" WHERE \"StockID\" = ?;";
 
     public DatabaseController() throws SQLException
     {
@@ -74,13 +83,13 @@ public class DatabaseController {
         return true;
     }
 
-    public String getBalance(String accID) throws SQLException
+    public double getBalance(String accID) throws SQLException
     {
         PreparedStatement ps = connection.prepareStatement(GET_BALANCE);
         ps.setString(1, accID);
         ResultSet result = ps.executeQuery();
         result.next();
-        return result.getString(1);
+        return result.getDouble(1);
     }
 
     public String getAccountID(String user, String pass) throws SQLException{
@@ -117,24 +126,35 @@ public class DatabaseController {
         return ResultsettoStringArray(ps.executeQuery(sb.toString()));
     }
 
-   public int BuyStock(String accID, String transID, Date date, String stockID, int quantity, double balance, double price) throws SQLException
+    public int[] BuyStock(String accID, String stockID, int quantity, double balance, double price) throws SQLException
     {
-        PreparedStatement ps = connection.prepareStatement(BUY_STOCK_QUERY);
+        PreparedStatement p1s = connection.prepareStatement(INSERT_TRANSACTION);
+        PreparedStatement p2s = connection.prepareStatement(INSERT_HOLDING);
+        PreparedStatement p3s = connection.prepareStatement(UPDATE_BALANCE);
+        Date currentDate = new Date(System.currentTimeMillis());
+        String transID =  Transaction.GenerateTID();
 
-        ps.setString(1, transID);
-        ps.setString(2, stockID);
-        ps.setInt(3, quantity);
-        ps.setDate(4,date);
-        ps.setString(5, accID);
-        ps.setString(6, stockID);
-        ps.setDate(7, date);
-        ps.setDouble(8, price);
-        ps.setDouble(9, price);
-        ps.setString(10, transID);
-        ps.setDouble(11, balance);
-        ps.setString(12,accID);
+        p1s.setString(1, transID);
+        p1s.setString(2, stockID);
+        p1s.setInt(3, quantity);
+        p1s.setDate(4,currentDate);
 
-        return ps.executeUpdate();
+        p2s.setString(1, accID);
+        p2s.setString(2, transID);
+        p2s.setString(3, stockID);
+        p2s.setDouble(4, price);
+        p2s.setDouble(5, price);
+        p2s.setDate(6, currentDate);
+
+        p3s.setDouble(1, balance);
+        p3s.setString(2, accID);
+
+        Statement batch = connection.createStatement();
+        
+        batch.addBatch(String.valueOf(p1s));
+        batch.addBatch(String.valueOf(p2s));
+        batch.addBatch(String.valueOf(p3s));
+        return batch.executeBatch();
     }
 
     public boolean createUser(String username, String password, String fname, String lname) throws SQLException {
@@ -174,10 +194,8 @@ public class DatabaseController {
 
             //setting the attributes of that object with the values from the query with the column names used
             holdLst.setStockID(rSet.getString("StockID"));
-            holdLst.setPurchaseDate(rSet.getDate("purchaseDate"));
             holdLst.setBuyPrice(rSet.getDouble("BuyPrice"));
             holdLst.setCurrentVal(rSet.getDouble("currentValue") );
-            holdLst.setTransID(rSet.getString("transactionID"));
 
             //adding the object to the holdings list
             holdList.add(holdLst);  
@@ -185,7 +203,22 @@ public class DatabaseController {
         //returning the holding list
         return holdList;
     }
+/*
+    public ObservableList<Stock> sellList(String userID) throws SQLException{
+        ObservableList<Stock> list = FXCollections.observableArrayList();
+        PreparedStatement prep = connection.prepareStatement(VIEW_HOLDINGS_QUERY);
+        prep.setString(1, userID);
 
+        ResultSet result = prep.executeQuery();
+
+        while (result.next()){
+            list.add(new Stock(result.getString("StockID"), result.getDouble("BuyPrice"), result.getDouble("CurrentValue")));
+        }
+
+        return list;
+    }
+    */
+    
     public ObservableList<Transaction> ViewTransaction(String userID) throws SQLException
     {
         ObservableList<Transaction> transactionList = FXCollections.observableArrayList();
@@ -243,11 +276,14 @@ public class DatabaseController {
         return sb.toString().split("\n");
     }
 
+    public boolean updateBal(String accId,double StockValue, int stockNum) throws SQLException
+    {
+        PreparedStatement p = connection.prepareStatement(SELL_BALANCE_UPDATE);
 
+        p.setDouble(1, StockValue * stockNum);
+        p.setString(2, accId);
 
-    public boolean updateBal(double newBal, double stockNum) throws SQLException{
-        Statement query = connection.createStatement();
-        return query.executeUpdate("UPDATE \"Portfolio\" SET \"Balance\" = '\"Balance\" + ("+newBal+" * "+stockNum+")';") > 0;
+        return p.execute();
     }
 
     public double getSellVal(String stockID) throws SQLException {
@@ -259,7 +295,7 @@ public class DatabaseController {
 
     public boolean getStockID(String ticker) throws SQLException {
         Statement query = connection.createStatement();
-        ResultSet result = query.executeQuery("Select \"StockID\" from \"Holdings\" WHERE \"StockID\" = '"+ticker+"';");
+        ResultSet result = query.executeQuery(GET_ONE_STOCK);
 
         if(result.absolute(1)) {
             return false;
@@ -267,6 +303,67 @@ public class DatabaseController {
         else {
             return true;
         }
+    }
+
+    public ObservableList<AggregateHolding> aggregateHoldings (String accId) throws SQLException
+    {
+        PreparedStatement p = connection.prepareStatement(AGGREGATE_HOLDINGS);
+
+        ObservableList<AggregateHolding> hlist = FXCollections.observableArrayList();
+
+        p.setString(1, accId);
+        ResultSet resultSet = p.executeQuery();
+        while(resultSet.next())
+        {
+            AggregateHolding h = new AggregateHolding();
+            h.ticker = resultSet.getString("StockID");
+            h.shares = resultSet.getInt("shares");
+            h.sellPrice = resultSet.getDouble("Sell Price");
+            hlist.add(h);  
+        }
+
+        return hlist;
+    }
+
+    public boolean SellStock(String accid, String stockid, int quantity) throws SQLException
+    {
+        PreparedStatement p1 = connection.prepareStatement(INSERT_TRANSACTION);
+        PreparedStatement p3 = connection.prepareStatement(INSERT_HOLDING);
+        PreparedStatement p2 = connection.prepareStatement(UPDATE_BALANCE);
+
+        double sellPrice = getSellVal(stockid);
+        Date today = new Date(System.currentTimeMillis());
+        String tid = Transaction.GenerateTID();
+
+        p1.setString(1, tid);
+        p1.setString(2, stockid);
+        p1.setInt(3,-quantity);
+        p1.setDate(4, today);
+
+        p2.setDouble(1, quantity * sellPrice);
+        p2.setString(2, accid);
+
+        p3.setString(1, accid);
+        p3.setString(2, tid);
+        p3.setString(3, stockid);
+        p3.setDouble(4, 0);
+        p3.setDouble(5, sellPrice);
+        p3.setDate(6, today);
+        
+        Statement s = connection.createStatement();
+
+        s.addBatch(String.valueOf(p1));
+        s.addBatch(String.valueOf(p2));
+        s.addBatch(String.valueOf(p3));
+
+        int[] state = s.executeBatch();
+
+        for (int x : state) 
+        {
+            if (x < 0)
+                return false;
+        }
+        return true;
     }
 
     public boolean deleteSell(String ticker) throws SQLException {
