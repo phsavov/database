@@ -28,7 +28,7 @@ public class User {
         Random rand = new Random();
         id = id + Math.abs((rand.nextInt() % 10000000));
 
-        System.out.println(id);
+        //System.out.println(id);
         if (id.length() < 10){
             return id;
         } else {

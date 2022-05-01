@@ -161,7 +161,7 @@ public class buyStockController {
 
             DatabaseController db = new DatabaseController();
 
-            System.out.println(accID);
+            //System.out.println(accID);
 
             db.addFunds(accID, add);
         }

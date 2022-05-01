@@ -132,7 +132,6 @@ public class SellStocksPageController {
 
         try {
             sellStocks.setItems(listOfStocks);
-            System.out.print("here");
         } catch (Exception e) {
             e.printStackTrace();
         }
