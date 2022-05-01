@@ -21,7 +21,8 @@ public class DatabaseController {
     private static String AGGREGATE_HOLDINGS= "select \"Holdings\".\"StockID\", sum(\"Quantity\") as \"shares\", \"Holdings\".\"CurrentValue\" as \"Sell Price\"\n"+
                                                "from (\"Holdings\" join \"Transactions\" on \"Holdings\".\"TransactionID\" = \"Transactions\".\"TransactionID\")\n"+
                                                "where \"AccountID\" = ?\n"+
-                                               "group by \"Holdings\".\"StockID\", \"Holdings\".\"CurrentValue\";";
+                                               "group by \"Holdings\".\"StockID\", \"Holdings\".\"CurrentValue\"" +
+                                               "order by \"shares\"";
     
     private static String INSERT_STOCK = "INSERT INTO \"Stocks\"(\"StockID\", \"StockValue\", \"Open\", \"Close\", \"High\", \"Change\") VALUES (?,?,?,?,?,?);";
     private static String CREATE_USER = "INSERT INTO \"UserAccount\"(\"AccountID\",\"Uname\",\"userPassword\",\"FirstName\",\"LastName\") VALUES (?,?,?,?,?);";
@@ -32,7 +33,9 @@ public class DatabaseController {
     private static String VIEW_HOLDINGS_QUERY =  "Select * from \"Holdings\" where \"AccountID\" = ?";
     private static String SELL_STOCK_QUERY = "";
     private static String TRADE_STOCK_QUERY = "";
-    private static String VIEW_TRANSACTION_QUERY = "Select * from \"Transactions\", \"UserAccount\" where \"AccountID\" = ?";
+    private static String VIEW_TRANSACTION_QUERY = "Select * from \"Transactions\" "+
+                                                   "where \"TransactionID\" IN (Select \"TransactionID\" From \"Holdings\"" +
+                                                                                "where \"AccountID\" = ?);";
     private static String GET_BALANCE = "select \"Balance\"\n from \"Portfolio\"\n where \"Portfolio\".\"AccountID\" = ?;";
     private static String GET_ONE_STOCK = "Select \"StockID\" from \"Stocks\" WHERE \"StockID\" = ?;";
 
