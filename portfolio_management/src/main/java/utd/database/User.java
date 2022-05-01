@@ -22,7 +22,7 @@ public class User {
         stocks.add(new Holding(stock, ammount));
     }
 
-    public String generateAcountID(){
+    public static String generateAcountID(){
         String id = "";
 
         Random rand = new Random();

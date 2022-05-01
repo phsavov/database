@@ -11,6 +11,7 @@ public class DatabaseController {
             "VALUES(?,?,?,?);\n";
     private static String INSERT_HOLDING ="INSERT INTO \"Holdings\"(\"AccountID\",\"TransactionID\",\"StockID\",\"BuyPrice\",\"CurrentValue\",\"PurchaseDate\")\n" +
             "VALUES(?,?,?,?,?,?);\n";
+    private static String INSERT_PORTFOLIO = "INSERT INTO \"Portfolio\" (AccountID, Balance) VALUES(?,?);";
     private static String UPDATE_BALANCE ="UPDATE \"Portfolio\"\n" +
             "SET \"Balance\" = ?\n" +
             "WHERE \"AccountID\"= ?;";
@@ -34,6 +35,8 @@ public class DatabaseController {
     private static String VIEW_TRANSACTION_QUERY = "Select * from \"Transactions\", \"UserAccount\" where \"AccountID\" = ?";
     private static String GET_BALANCE = "select \"Balance\"\n from \"Portfolio\"\n where \"Portfolio\".\"AccountID\" = ?;";
     private static String GET_ONE_STOCK = "Select \"StockID\" from \"Stocks\" WHERE \"StockID\" = ?;";
+
+    private static double StartingBalance = 500;
 
     public DatabaseController() throws SQLException
     {
@@ -159,12 +162,24 @@ public class DatabaseController {
 
     public boolean createUser(String username, String password, String fname, String lname) throws SQLException {
         PreparedStatement ps = connection.prepareStatement(CREATE_USER);
-        ps.setString(1, (new User().generateAcountID()));
+        PreparedStatement p1s = connection.prepareStatement(INSERT_PORTFOLIO);
+
+        String accID = User.generateAcountID();
+        ps.setString(1, accID);
         ps.setString(2, username);
         ps.setString(3, password);
         ps.setString(4, fname);
         ps.setString(5, lname);
-        ps.executeUpdate();
+
+        p1s.setString(1, accID);
+        p1s.setDouble(2, StartingBalance);
+
+        Statement batch = connection.createStatement();
+
+        batch.addBatch(String.valueOf(ps));
+        batch.addBatch(String.valueOf(p1s));
+
+        batch.executeBatch();
         return true;
     }
 
