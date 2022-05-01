@@ -54,6 +54,9 @@ public class buyStockController {
     @FXML
     TableColumn<Stock, Double> price;
 
+    @FXML
+    Button load;
+
     private Scene scene;
     private Parent root;
     private Stage stage;
@@ -129,16 +132,36 @@ public class buyStockController {
     }
 
     @FXML
+    public void loadBalance(ActionEvent event) throws SQLException{
+        Node node = (Node) event.getSource();
+        Stage stage = (Stage) node.getScene().getWindow();
+        User user = (User) stage.getUserData();
+        accID = String.valueOf(user.getAccountID());
+
+        balance = Double.valueOf(new DatabaseController().getBalance(accID));
+        balanceTextField.setText(String.valueOf(balance));
+
+    }
+
+    @FXML
     public void AddFunds(ActionEvent event)
     {
+        Node node = (Node) event.getSource();
+        Stage stage = (Stage) node.getScene().getWindow();
+        User user = (User) stage.getUserData();
+        accID = String.valueOf(user.getAccountID());
+
+
         String adding = funds.getText();
 
-
+        
         try
         {
             double add = Double.parseDouble(adding);
 
             DatabaseController db = new DatabaseController();
+
+            System.out.println(accID);
 
             db.addFunds(accID, add);
         }

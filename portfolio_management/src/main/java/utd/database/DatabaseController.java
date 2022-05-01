@@ -15,7 +15,7 @@ public class DatabaseController {
             "SET \"Balance\" = ?\n" +
             "WHERE \"AccountID\"= ?;";
 
-    private static String ADD_FUNDS = "UPDATE \"Portfolio\" SET \"Balance\" = Balance + ? WHERE \"AccountID\"= ?;";
+    private static String ADD_FUNDS = "UPDATE \"Portfolio\" SET \"Balance\" = \"Balance\" + ? WHERE \"AccountID\"= ?;";
 
     private static String AGGREGATE_HOLDINGS= "select \"Holdings\".\"StockID\", sum(\"Quantity\") as \"shares\", \"Holdings\".\"CurrentValue\" as \"Sell Price\"\n"+
                                                "from (\"Holdings\" join \"Transactions\" on \"Holdings\".\"TransactionID\" = \"Transactions\".\"TransactionID\")\n"+

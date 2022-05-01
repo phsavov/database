@@ -50,5 +50,6 @@
       </VBox>
       <Button fx:id="add" layoutX="496.0" layoutY="315.0" mnemonicParsing="false" onAction="#AddFunds" prefHeight="39.0" prefWidth="70.0" text="ADD" />
       <TextField fx:id="funds" layoutX="372.0" layoutY="315.0" prefHeight="39.0" prefWidth="110.0" promptText="Add Funds" />
+      <Button fx:id="load" layoutX="381.0" layoutY="46.0" mnemonicParsing="false" onAction="#loadBalance" text="Load -&gt;" />
    </children>
 </AnchorPane>
