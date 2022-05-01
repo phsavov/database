@@ -11,7 +11,7 @@ public class DatabaseController {
             "VALUES(?,?,?,?);\n";
     private static String INSERT_HOLDING ="INSERT INTO \"Holdings\"(\"AccountID\",\"TransactionID\",\"StockID\",\"BuyPrice\",\"CurrentValue\",\"PurchaseDate\")\n" +
             "VALUES(?,?,?,?,?,?);\n";
-    private static String INSERT_PORTFOLIO = "INSERT INTO \"Portfolio\" (AccountID, Balance) VALUES(?,?);";
+    private static String INSERT_PORTFOLIO = "INSERT INTO \"Portfolio\" (\"AccountID\", \"Balance\") VALUES(?,?);";
     private static String UPDATE_BALANCE ="UPDATE \"Portfolio\"\n" +
             "SET \"Balance\" = ?\n" +
             "WHERE \"AccountID\"= ?;";
