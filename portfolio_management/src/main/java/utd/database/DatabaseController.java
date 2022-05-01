@@ -15,7 +15,7 @@ public class DatabaseController {
             "SET \"Balance\" = ?\n" +
             "WHERE \"AccountID\"= ?;";
 
-    private static String SELL_BALANCE_UPDATE = "UPDATE \"Portfolio\" SET \"Balance\" = Balance + ? WHERE \"AccountID\"= ?;";
+    private static String ADD_FUNDS = "UPDATE \"Portfolio\" SET \"Balance\" = Balance + ? WHERE \"AccountID\"= ?;";
 
     private static String AGGREGATE_HOLDINGS= "select \"Holdings\".\"StockID\", sum(\"Quantity\") as \"shares\", \"Holdings\".\"CurrentValue\" as \"Sell Price\"\n"+
                                                "from (\"Holdings\" join \"Transactions\" on \"Holdings\".\"TransactionID\" = \"Transactions\".\"TransactionID\")\n"+
@@ -278,9 +278,19 @@ public class DatabaseController {
 
     public boolean updateBal(String accId,double StockValue, int stockNum) throws SQLException
     {
-        PreparedStatement p = connection.prepareStatement(SELL_BALANCE_UPDATE);
+        PreparedStatement p = connection.prepareStatement(ADD_FUNDS);
 
         p.setDouble(1, StockValue * stockNum);
+        p.setString(2, accId);
+
+        return p.execute();
+    }
+
+    public boolean addFunds(String accId,double amt) throws SQLException
+    {
+        PreparedStatement p = connection.prepareStatement(ADD_FUNDS);
+        
+        p.setDouble(1, amt);
         p.setString(2, accId);
 
         return p.execute();
