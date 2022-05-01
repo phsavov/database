@@ -28,6 +28,12 @@ public class buyStockController {
     Button buyButton;
 
     @FXML
+    Button add;
+
+    @FXML
+    TextField funds;
+
+    @FXML
     TextField stockTextField;
 
     @FXML
@@ -120,6 +126,32 @@ public class buyStockController {
 
         BooleanBinding booleanBind = buyTextField.textProperty().isEmpty();
         buyButton.disableProperty().bind(booleanBind);
+    }
+
+    @FXML
+    public void AddFunds(ActionEvent event)
+    {
+        String adding = funds.getText();
+
+
+        try
+        {
+            double add = Double.parseDouble(adding);
+
+            DatabaseController db = new DatabaseController();
+
+            db.addFunds(accID, add);
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            Alert made = new Alert(Alert.AlertType.ERROR);
+            made.setHeaderText("Invalid Input");
+            made.setContentText("There was an issue with the users input");
+            made.showAndWait();
+            funds.clear();
+            
+        }
     }
 
     public void initialize() throws SQLException {

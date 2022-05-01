@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
@@ -9,7 +13,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="utd.database.buyStockController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="utd.database.buyStockController">
    <children>
       <Button fx:id="returnHome" layoutX="14.0" layoutY="29.0" mnemonicParsing="false" onAction="#goBack" text="&lt; Home" />
       <Text layoutX="272.0" layoutY="71.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Buy">
@@ -23,7 +27,7 @@
           <TableColumn fx:id="price" prefWidth="291.0" text="Price" />
         </columns>
       </TableView>
-      <VBox fx:id="stockInfoVbox" layoutX="168.0" layoutY="303.0" prefHeight="91.0" prefWidth="123.0">
+      <VBox fx:id="stockInfoVbox" layoutX="43.0" layoutY="303.0" prefHeight="91.0" prefWidth="123.0">
          <children>
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Stock ID:" />
             <TextField fx:id="stockTextField" editable="false" prefHeight="25.0" prefWidth="375.0" />
@@ -31,7 +35,7 @@
             <TextField fx:id="priceTextField" editable="false" prefHeight="25.0" prefWidth="252.0" />
          </children>
       </VBox>
-      <VBox fx:id="buyStockVbox" layoutX="315.0" layoutY="303.0" prefHeight="91.0" prefWidth="123.0">
+      <VBox fx:id="buyStockVbox" layoutX="190.0" layoutY="303.0" prefHeight="91.0" prefWidth="123.0">
          <children>
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Buy how many?" />
             <TextField fx:id="buyTextField" editable="false" />
@@ -44,5 +48,7 @@
             <TextField fx:id="balanceTextField" editable="false" />
          </children>
       </VBox>
+      <Button fx:id="add" layoutX="496.0" layoutY="315.0" mnemonicParsing="false" onAction="#AddFunds" prefHeight="39.0" prefWidth="70.0" text="ADD" />
+      <TextField fx:id="funds" layoutX="372.0" layoutY="315.0" prefHeight="39.0" prefWidth="110.0" promptText="Add Funds" />
    </children>
 </AnchorPane>
